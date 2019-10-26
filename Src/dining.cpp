@@ -44,10 +44,15 @@ Dining Dining::operator+(const Dining& dining) {
      *
      * Add your code here
      * */
+    string newName = name;
+    if (name != dining.getName()) {
+        newName = name + " + " + dining.getName();
+    }
+    return Dining(newName, fat + dining.getFat(), energy + dining.getEnergy(), price + dining.getPrice());
 }
 
 Dining& Dining::operator+=(const Dining& dining) {
-	/*
+    /*
 	 * dining1 += dining2
 	 *
 	 * add all other attributes (fat, energy, price)
@@ -57,6 +62,13 @@ Dining& Dining::operator+=(const Dining& dining) {
 	 *
 	 * Add your code here
 	 * */
+    if (name != dining.getName) {
+        name = name + " + " + dining.getName();
+    }
+    fat += dining.getFat();
+    energy += dining.getEnergy();
+    price = dining.getPrice();
+    return (*this);
 }
 
 Dining& Dining::operator=(const Dining& dining) {
@@ -65,4 +77,9 @@ Dining& Dining::operator=(const Dining& dining) {
 	 *
 	 * Add your code here!
 	 */
+    name = dining.getName();
+    fat = dining.getFat();
+    energy = dining.getEnergy();
+    price = dining.getPrice();
+    return (*this);
 }

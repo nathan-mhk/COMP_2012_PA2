@@ -50,9 +50,8 @@ void Buddy::debug_print(int indent) const {
 	dining_schedule.debug_print(indent + 1);
 }
 
-bool Buddy::capable(Activity<Workout> workout_activity)
-{
-	/*
+bool Buddy::capable(Activity<Workout> workout_activity) {
+    /*
 	 * You ONLY need to consider the following to determine whether capable or not
 	 * 1. check whether buddy's attributes are enough 
 	 *     (enough means: energy + change of energy >= 0 and fat + change of fat >= 0 and muscle + change of muscle >= 0
@@ -62,6 +61,17 @@ bool Buddy::capable(Activity<Workout> workout_activity)
 	 *
 	 * Add your code here!
 	 * */
+    // int newEnergy = energy + workout_activity.item.getEnergyChange();
+    // int newFat = fat + workout_activity.item.getFatChange();
+    // int newMuscle = muscle + workout_activity.item.getMuscleChange();
+    if (
+        (energy + workout_activity.item.getEnergyChange() >= 0) &&
+        (fat + workout_activity.item.getFatChange() >= 0) &&
+        (muscle + workout_activity.item.getMuscleChange() >= 0) &&
+        workout_schedule.isFree(workout_activity.start_time, workout_activity.end_time)) {
+        return true;
+    }
+    return false;
 }
 
 bool Buddy::capable(Activity<Dining> dining_activity) {
@@ -74,6 +84,12 @@ bool Buddy::capable(Activity<Dining> dining_activity) {
 	 *
      * Add your code here!
      * */
+    if (
+        (money - dining_activity.item.getPrice >= 0) &&
+        dining_schedule.isFree(dining_activity.start_time, dining_activity.end_time)) {
+        return true;
+    }
+	return false;
 }
 
 Buddy& Buddy::operator<<(Activity<Workout> workout_activity) {
@@ -86,12 +102,27 @@ Buddy& Buddy::operator<<(Activity<Workout> workout_activity) {
      * 
      * Add your code here!
      */
+    if (capable(workout_activity)) {
+        workout_schedule.insert(workout_activity.start_time, workout_activity.end_time, workout_activity.item);
+        energy += workout_activity.item.getEnergyChange();
+        fat += workout_activity.item.getFatChange();
+        muscle += workout_activity.item.getMuscleChange();
+    }
+    return (*this);
 }
 
 Buddy& Buddy::operator<<(Activity<Dining> dining_activity) {
     /*
      * Add your code here!
      */
+	int newMoney = money - dining_activity.item.getPrice();
+	if (capable(dining_activity) && newMoney >= 0) {
+		dining_schedule.insert(dining_activity.start_time, dining_activity.end_time, dining_activity.item);
+		energy += dining_activity.item.getEnergy();
+		fat += dining_activity.item.getFat();
+		money = newMoney;
+	}
+	return (*this);
 }
 
 bool Buddy::remove_workout(int start, int end) {
