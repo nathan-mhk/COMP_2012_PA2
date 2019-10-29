@@ -85,7 +85,7 @@ bool Buddy::capable(Activity<Dining> dining_activity) {
      * Add your code here!
      * */
     if (
-        (money - dining_activity.item.getPrice >= 0) &&
+        (money - dining_activity.item.getPrice() >= 0) &&
         dining_schedule.isFree(dining_activity.start_time, dining_activity.end_time)) {
         return true;
     }

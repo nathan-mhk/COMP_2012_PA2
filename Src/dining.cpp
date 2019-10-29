@@ -62,7 +62,7 @@ Dining& Dining::operator+=(const Dining& dining) {
 	 *
 	 * Add your code here
 	 * */
-    if (name != dining.getName) {
+    if (name != dining.getName()) {
         name = name + " + " + dining.getName();
     }
     fat += dining.getFat();

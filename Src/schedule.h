@@ -59,6 +59,7 @@ int Schedule<T>::size() const {
 	 *
 	 * Add your code here!
 	 */
+	return static_cast<int>(values.size());
 }
 
 template <typename T>
@@ -71,11 +72,22 @@ vector<T> Schedule<T>::operator()(int start, int end) {
 	 *  
      * Add your code here!
      * */
+    vector<T> vectorT;
+    if (start >= end) {
+        return vectorT;
+    }
+    for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
+        const duration_type& duration = itr->first;
+        if ((duration.first >= start) && duration.second <= end) {
+            vectorT.push_back(itr->second);
+        }
+    }
+    return vectorT;
 }
 
 template <typename T>
 bool Schedule<T>::isFree(int start, int end) {
-	/*
+    /*
 	 * if start time is not smaller than end time, return false
 	 * if start time is smaller than min_time, return false
 	 * if end time is larger than max_time, return false
@@ -85,6 +97,17 @@ bool Schedule<T>::isFree(int start, int end) {
 	 *
 	 * Add your code here!
 	 * */
+    if ((start >= end) || (start < min_time) || (end > max_time)) {
+        return false;
+    }
+    for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
+        const duration_type& duration = itr->first;
+        if ((duration.first < start) && (duration.second <= start)) {
+            continue;
+        } else
+            return (duration.first >= end);
+    }
+    return true;
 }
 
 template <typename T>
@@ -95,6 +118,8 @@ void Schedule<T>::mergeSameContinuous() {
 	 *
 	 * Add your code here!
 	 */
+    // TODO
+	
 }
 
 template <typename T>
@@ -104,6 +129,10 @@ void Schedule<T>::insert(int start, int end, T item) {
 	 *
 	 * Add your code here!
 	 * */
+	if (isFree(start, end)) {
+		values.insert(make_pair(make_pair(start, end), item));
+		mergeSameContinuous();
+	}
 }
 
 template <typename T>
@@ -114,15 +143,29 @@ bool Schedule<T>::remove(int start, int end) {
 	 * 
      * Add your code here!
      * */
+    if (start >= end) {
+        return false;
+    } else {
+        for (schedule_it itr = values.begin(); itr != values.end(); ++itr) {
+            duration_type duration = itr->first;
+            if ((duration.first >= start) && (duration.second <= end)) {
+                values.erase(itr);
+            }
+        }
+        return true;
+    }
 }
 
 template <typename T>
 void Schedule<T>::remove(string name) {
-	/*
+    /*
 	 * Remove items whose names are the same as the input name
 	 *
 	 * Add your code here!
 	 * */
+
+    // TODO
+
 }
 
 template <typename T>
@@ -138,6 +181,9 @@ T Schedule<T>::summarize(string name, int &total_time) const {
 	 *
 	 * Add your code here!
 	 * */
+    // TODO
+    T temp;
+    return temp;
 }
 
 template<typename T>
