@@ -46,7 +46,7 @@ Dining Dining::operator+(const Dining& dining) {
      * */
     string newName = name;
     if (name != dining.getName()) {
-        newName = name + " + " + dining.getName();
+        newName = name + dining.getName();
     }
     return Dining(newName, fat + dining.getFat(), energy + dining.getEnergy(), price + dining.getPrice());
 }
@@ -63,7 +63,7 @@ Dining& Dining::operator+=(const Dining& dining) {
 	 * Add your code here
 	 * */
     if (name != dining.getName()) {
-        name = name + " + " + dining.getName();
+        name = name + dining.getName();
     }
     fat += dining.getFat();
     energy += dining.getEnergy();

@@ -46,7 +46,7 @@ Workout Workout::operator+(const Workout& workout) {
 	 * */
 	string newName = name;
 	if (name != workout.getName()) {
-		newName = name + " + " + workout.getName();
+		newName = name + workout.getName();
 	}
 	return Workout(newName, fat_change + workout.getFatChange(), muscle_change + workout.getMuscleChange(), energy_change + workout.getEnergyChange());
 }
@@ -62,9 +62,10 @@ Workout& Workout::operator+=(const Workout& workout) {
 	 *
 	 * Add your code here
      * */
+	
 	// (*this) = (*this) + workout;
 	if (name != workout.getName()) {
-		name = name + " + " + workout.getName();
+		name = name + workout.getName();
 	}
 	fat_change += workout.getFatChange();
 	muscle_change += workout.getMuscleChange();

@@ -77,8 +77,8 @@ vector<T> Schedule<T>::operator()(int start, int end) {
         return vectorT;
     }
     for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
-        const duration_type& duration = itr->first;
-        if ((duration.first >= start) && duration.second <= end) {
+        // const duration_type& duration = itr->first;
+        if (((itr->first).first >= start) && (itr->first).second <= end) {
             vectorT.push_back(itr->second);
         }
     }
@@ -101,11 +101,11 @@ bool Schedule<T>::isFree(int start, int end) {
         return false;
     }
     for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
-        const duration_type& duration = itr->first;
-        if ((duration.first < start) && (duration.second <= start)) {
+        // const duration_type& duration = itr->first;
+        if (((itr->first).first < start) && ((itr->first).second <= start)) {
             continue;
         } else
-            return (duration.first >= end);
+            return ((itr->first).first >= end);
     }
     return true;
 }
@@ -118,8 +118,32 @@ void Schedule<T>::mergeSameContinuous() {
 	 *
 	 * Add your code here!
 	 */
-    // TODO
-	
+
+	// TODO
+    for (schedule_it itr = values.begin()); itr != values.end(); ++itr) {
+        duration_type mergedTime = itr->first;
+        T mergedItem = itr->second;
+        int mergeCount = 0;
+        // For every item in values, check the mergability of all items following the current item
+        for (schedule_it secItr = itr + 1; secItr != values.end(); ++secItr) {
+            // End time of the current item == start time of the next item
+            if (mergedTime.second == (secItr->first).first) {
+                // Update the end time
+                mergedTime.second = (secItr->first).second;
+                // Update the item being merged
+                mergedItem += secItr->second;
+                ++mergeCount;
+            } else {
+                break;  // Proceed to the next item
+            }
+        }
+        // mergeCount is used to prevent redundant removing and copying (i.e. only 1 item to merge)
+        // remove() is only called when mergeCount != 0 (short circuit evaluation)
+        // All items within the range removed by remove() are continuous
+        if ((mergeCount != 0) && remove(mergedTime.first, mergedTime.second)) {
+            values.insert(make_pair(mergedTime, mergedItem));
+        }
+    }
 }
 
 template <typename T>
@@ -147,8 +171,8 @@ bool Schedule<T>::remove(int start, int end) {
         return false;
     } else {
         for (schedule_it itr = values.begin(); itr != values.end(); ++itr) {
-            duration_type duration = itr->first;
-            if ((duration.first >= start) && (duration.second <= end)) {
+            // const duration_type& duration = itr->first;
+            if (((itr->first).first >= start) && ((itr->first).second <= end)) {
                 values.erase(itr);
             }
         }
@@ -163,9 +187,11 @@ void Schedule<T>::remove(string name) {
 	 *
 	 * Add your code here!
 	 * */
-
-    // TODO
-
+    for (schedule_it itr = values.begin(); itr != values.end(); ++itr) {
+        if (itr->second.getName() == name) {
+            values.erase(itr);
+        }
+    }
 }
 
 template <typename T>
