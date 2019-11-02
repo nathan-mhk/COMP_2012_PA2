@@ -171,14 +171,14 @@ bool Schedule<T>::remove(int start, int end) {
     if (start >= end) {
         return false;
     } else {
-         for (schedule_it itr = values.begin(); itr != values.end();) {
-             if (((itr->first).first >= start) && ((itr->first).second <= end)) {
-             	// For C++11 use values.erase(itr); instead
-                 values.erase(itr++);
-             } else {
-                 ++itr;
-             }
-         }
+        for (schedule_it itr = values.begin(); itr != values.end();) {
+            if (((itr->first).first >= start) && ((itr->first).second <= end)) {
+                // For C++11 use values.erase(itr); instead
+                values.erase(itr++);
+            } else {
+                ++itr;
+            }
+        }
         return true;
     }
 }

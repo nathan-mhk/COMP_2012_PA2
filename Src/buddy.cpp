@@ -61,11 +61,7 @@ bool Buddy::capable(Activity<Workout> workout_activity) {
 	 *
 	 * Add your code here!
 	 * */
-    // int newEnergy = energy + workout_activity.item.getEnergyChange();
-    // int newFat = fat + workout_activity.item.getFatChange();
-    // int newMuscle = muscle + workout_activity.item.getMuscleChange();
-    if (
-        (energy + workout_activity.item.getEnergyChange() >= 0) &&
+    if ((energy + workout_activity.item.getEnergyChange() >= 0) &&
         (fat + workout_activity.item.getFatChange() >= 0) &&
         (muscle + workout_activity.item.getMuscleChange() >= 0) &&
         workout_schedule.isFree(workout_activity.start_time, workout_activity.end_time)) {
@@ -84,8 +80,7 @@ bool Buddy::capable(Activity<Dining> dining_activity) {
 	 *
      * Add your code here!
      * */
-    if (
-        (money - dining_activity.item.getPrice() >= 0) &&
+    if ((money - dining_activity.item.getPrice() >= 0) &&
         dining_schedule.isFree(dining_activity.start_time, dining_activity.end_time)) {
         return true;
     }
@@ -116,7 +111,7 @@ Buddy& Buddy::operator<<(Activity<Dining> dining_activity) {
      * Add your code here!
      */
 	int newMoney = money - dining_activity.item.getPrice();
-	if (capable(dining_activity) && newMoney >= 0) {
+	if ((newMoney >= 0) && capable(dining_activity)) {
 		dining_schedule.insert(dining_activity.start_time, dining_activity.end_time, dining_activity.item);
 		energy += dining_activity.item.getEnergy();
 		fat += dining_activity.item.getFat();
