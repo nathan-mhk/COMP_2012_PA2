@@ -155,5 +155,6 @@ int main() {
 	test_remove_workout(tom, "jogging");
 
     cout << "[The end of program]" << endl;
+    cin.get();
     return 0;
 }

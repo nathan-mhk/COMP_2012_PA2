@@ -65,7 +65,7 @@ Workout& Workout::operator+=(const Workout& workout) {
 	
 	// (*this) = (*this) + workout;
 	if (name != workout.getName()) {
-		name = name + workout.getName();
+		name += workout.getName();
 	}
 	fat_change += workout.getFatChange();
 	muscle_change += workout.getMuscleChange();

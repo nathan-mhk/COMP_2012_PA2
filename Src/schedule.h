@@ -77,7 +77,6 @@ vector<T> Schedule<T>::operator()(int start, int end) {
         return vectorT;
     }
     for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
-        // const duration_type& duration = itr->first;
         if (((itr->first).first >= start) && (itr->first).second <= end) {
             vectorT.push_back(itr->second);
         }
@@ -101,7 +100,6 @@ bool Schedule<T>::isFree(int start, int end) {
         return false;
     }
     for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
-        // const duration_type& duration = itr->first;
         if (((itr->first).first < start) && ((itr->first).second <= start)) {
             continue;
         } else
@@ -118,18 +116,21 @@ void Schedule<T>::mergeSameContinuous() {
 	 *
 	 * Add your code here!
 	 */
-
-	// TODO
-    for (schedule_it itr = values.begin()); itr != values.end(); ++itr) {
+    for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
         duration_type mergedTime = itr->first;
         T mergedItem = itr->second;
         int mergeCount = 0;
+
         // For every item in values, check the mergability of all items following the current item
-        for (schedule_it secItr = itr + 1; secItr != values.end(); ++secItr) {
-            // End time of the current item == start time of the next item
-            if (mergedTime.second == (secItr->first).first) {
+        schedule_const_it secItr = itr;
+        for (++secItr; secItr != values.end(); ++secItr) {
+
+            // End time of the current item == start time of the next item && same name
+            if ((mergedTime.second == (secItr->first).first) && (mergedItem.getName() == (secItr->second).getName())) {
+
                 // Update the end time
                 mergedTime.second = (secItr->first).second;
+
                 // Update the item being merged
                 mergedItem += secItr->second;
                 ++mergeCount;
@@ -170,12 +171,14 @@ bool Schedule<T>::remove(int start, int end) {
     if (start >= end) {
         return false;
     } else {
-        for (schedule_it itr = values.begin(); itr != values.end(); ++itr) {
-            // const duration_type& duration = itr->first;
-            if (((itr->first).first >= start) && ((itr->first).second <= end)) {
-                values.erase(itr);
-            }
-        }
+         for (schedule_it itr = values.begin(); itr != values.end();) {
+             if (((itr->first).first >= start) && ((itr->first).second <= end)) {
+             	// For C++11 use values.erase(itr); instead
+                 values.erase(itr++);
+             } else {
+                 ++itr;
+             }
+         }
         return true;
     }
 }
@@ -196,7 +199,7 @@ void Schedule<T>::remove(string name) {
 
 template <typename T>
 T Schedule<T>::summarize(string name, int &total_time) const {
-	/*
+    /*
      * If items A, B, D, F in schedule have the same name
      *   1. Calculate the total time of A, B, D, F by summing their durations 
 	 *       (duration_of_an_item = end_time - start_time). And assign the result to total_time
@@ -207,9 +210,16 @@ T Schedule<T>::summarize(string name, int &total_time) const {
 	 *
 	 * Add your code here!
 	 * */
-    // TODO
-    T temp;
-    return temp;
+    T sumItem(name);
+    total_time = 0;
+
+    for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
+        if ((itr->second).getName() == name) {
+            total_time += (itr->first).second - (itr->first).first;
+            sumItem += itr->second;
+        }
+    }
+    return sumItem;
 }
 
 template<typename T>
