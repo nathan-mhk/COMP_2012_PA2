@@ -117,14 +117,15 @@ void Schedule<T>::mergeSameContinuous() {
 	 * Add your code here!
 	 */
     for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
+        // ++nextItr;
         duration_type mergedTime = itr->first;
         T mergedItem = itr->second;
         int mergeCount = 0;
 
-        // For every item in values, check the mergability of all items following the current item
+        // For every item in values, check all items following the current item
         schedule_const_it secItr = itr;
         for (++secItr; secItr != values.end(); ++secItr) {
-
+            
             // End time of the current item == start time of the next item && same name
             if ((mergedTime.second == (secItr->first).first) && (mergedItem.getName() == (secItr->second).getName())) {
 
@@ -190,9 +191,11 @@ void Schedule<T>::remove(string name) {
 	 *
 	 * Add your code here!
 	 * */
-    for (schedule_it itr = values.begin(); itr != values.end(); ++itr) {
+    for (schedule_it itr = values.begin(); itr != values.end();) {
         if (itr->second.getName() == name) {
-            values.erase(itr);
+            values.erase(itr++);
+        } else {
+            ++itr;
         }
     }
 }
