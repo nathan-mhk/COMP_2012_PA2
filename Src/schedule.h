@@ -116,34 +116,28 @@ void Schedule<T>::mergeSameContinuous() {
 	 *
 	 * Add your code here!
 	 */
-    for (schedule_const_it itr = values.begin(); itr != values.end(); ++itr) {
-        // ++nextItr;
+    for (schedule_const_it itr = values.begin(), nextItr = itr; itr != values.end();) {
         duration_type mergedTime = itr->first;
         T mergedItem = itr->second;
         int mergeCount = 0;
 
         // For every item in values, check all items following the current item
-        schedule_const_it secItr = itr;
-        for (++secItr; secItr != values.end(); ++secItr) {
-            
-            // End time of the current item == start time of the next item && same name
-            if ((mergedTime.second == (secItr->first).first) && (mergedItem.getName() == (secItr->second).getName())) {
-
-                // Update the end time
-                mergedTime.second = (secItr->first).second;
-
-                // Update the item being merged
-                mergedItem += secItr->second;
+        for (++nextItr; nextItr != values.end(); ++nextItr) {
+            if ((mergedItem.getName() == (nextItr->second).getName()) && (mergedTime.second == (nextItr->first).first)) {
+                mergedTime.second = (nextItr->first).second;
+                mergedItem += nextItr->second;
                 ++mergeCount;
             } else {
-                break;  // Proceed to the next item
+                break;
             }
         }
         // mergeCount is used to prevent redundant removing and copying (i.e. only 1 item to merge)
-        // remove() is only called when mergeCount != 0 (short circuit evaluation)
         // All items within the range removed by remove() are continuous
         if ((mergeCount != 0) && remove(mergedTime.first, mergedTime.second)) {
             values.insert(make_pair(mergedTime, mergedItem));
+            itr = values.begin();
+        } else {
+            ++itr;
         }
     }
 }
